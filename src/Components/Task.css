@@ -1,0 +1,14 @@
+.TaskArea{
+    background-color: lightgrey;
+  
+}
+
+.TaskArea_TaskName{
+    display: inline-block;
+
+}
+
+.TaskArea_Checkbox{
+    display: inline-block;
+
+}

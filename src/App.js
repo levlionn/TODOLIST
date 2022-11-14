@@ -1,23 +1,56 @@
-import logo from './logo.svg';
-import './App.css';
+import "./App.css";
+import Task from "./Components/Task";
+import Header from "./Header";
+
+import { useState } from "react";
+
+const DUMMY_DATA = [
+  {
+    id: 0,
+    taskName: "Go for a walk",
+    complete: false,
+  },
+  {
+    id: 1,
+    taskName: "Have some tea",
+    complete: true,
+  },
+  {
+    id: 2,
+    taskName: "Feed the cat",
+    complete: false,
+  },
+];
 
 function App() {
+  const [taskList, setTaskList] = useState("");
+  const [task, setTask] = useState("");
+
+  //function to handle adding to list
+  function handleAdd() {
+    //add item
+  }
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <Header />
+
+      <label>
+        <input
+          type="text"
+          value={task}
+          onChange={(t) => {
+            setTask(t.target.value);
+          }}
+        />
+      </label>
+      <button onClick={handleAdd}>Add To List</button>
+
+      <ul>
+        {DUMMY_DATA.map((item) => {
+          return <li key={item.id}>{item.taskName}</li>;
+        })}
+      </ul>
     </div>
   );
 }
