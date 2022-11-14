@@ -2,16 +2,10 @@ import React from "react";
 import "./Task.css";
 
 function Task(props) {
-  return (
-    <>
-      <span className="TaskArea">
-        <input className="TaskArea_Checkbox" type="checkbox"></input>
-        <li className="TaskArea_TaskName" key={props.key}>
-          {props.taskName}
-        </li>
-      </span>
-    </>
-  );
+  {
+    /* Reading the entire array of objects, but only pulling the names of the tasks and rendering those.*/
+  }
+  return <li>{props.task.taskName}</li>;
 }
 
 export default Task;

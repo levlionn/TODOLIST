@@ -1,8 +1,8 @@
 import "./App.css";
-import Task from "./Components/Task";
-import Header from "./Header";
-
 import { useState } from "react";
+
+import TaskList from "./Components/TaskList";
+import Header from "./Header";
 
 const DUMMY_DATA = [
   {
@@ -23,16 +23,12 @@ const DUMMY_DATA = [
 ];
 
 function App() {
-  const [taskList, setTaskList] = useState("");
+  const [taskList, setTaskList] = useState(DUMMY_DATA);
   const [task, setTask] = useState("");
-
-  //function to handle adding to list
-  function handleAdd() {
-    //add item
-  }
 
   return (
     <div className="App">
+      {/* This displays the <h1> tag above the website*/}
       <Header />
 
       <label>
@@ -44,12 +40,11 @@ function App() {
           }}
         />
       </label>
-      <button onClick={handleAdd}>Add To List</button>
+      <button>Add To List</button>
 
+      {/* This will pass the entire array of tasks down to the TaskList componenent to be rendered into task by the Task componenent. */}
       <ul>
-        {DUMMY_DATA.map((item) => {
-          return <li key={item.id}>{item.taskName}</li>;
-        })}
+        <TaskList todoitems={taskList} />{" "}
       </ul>
     </div>
   );
