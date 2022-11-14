@@ -1,14 +1,9 @@
-.TaskArea{
-    background-color: lightgrey;
-  
+.TaskBox{
+    display: flex;
+    justify-content: center;
 }
 
-.TaskArea_TaskName{
-    display: inline-block;
-
-}
-
-.TaskArea_Checkbox{
-    display: inline-block;
-
+.TaskBox_Checkbox{
+    margin-right: 2%;
+    
 }

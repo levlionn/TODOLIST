@@ -13,7 +13,7 @@ const DUMMY_DATA = [
   {
     id: 1,
     taskName: "Have some tea",
-    complete: true,
+    complete: false,
   },
   {
     id: 2,
@@ -25,6 +25,7 @@ const DUMMY_DATA = [
 function App() {
   const [taskList, setTaskList] = useState(DUMMY_DATA);
   const [task, setTask] = useState("");
+  const [completed, setCompleted] = useState(DUMMY_DATA);
 
   return (
     <div className="App">
@@ -35,16 +36,16 @@ function App() {
         <input
           type="text"
           value={task}
-          onChange={(t) => {
-            setTask(t.target.value);
+          onChange={(e) => {
+            setTask(e.target.value);
           }}
         />
       </label>
       <button>Add To List</button>
 
       {/* This will pass the entire array of tasks down to the TaskList componenent to be rendered into task by the Task componenent. */}
-      <ul>
-        <TaskList todoitems={taskList} />{" "}
+      <ul className="ListofTasks">
+        <TaskList todoitems={taskList} onCompletedItemChange={setTaskList} />{" "}
       </ul>
     </div>
   );
