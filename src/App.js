@@ -4,51 +4,38 @@ import { useState } from "react";
 import TaskList from "./Components/TaskList";
 import Header from "./Header";
 
-const DUMMY_DATA = [
-  {
-    id: 0,
-    taskName: "Go for a walk",
-    complete: false,
-  },
-  {
-    id: 1,
-    taskName: "Have some tea",
-    complete: false,
-  },
-  {
-    id: 2,
-    taskName: "Feed the cat",
-    complete: false,
-  },
-];
-
 function App() {
-  const [taskList, setTaskList] = useState(DUMMY_DATA);
+  const [taskList, setTaskList] = useState([
+    {
+      id: 0,
+      taskName: "This is a task",
+      complete: false,
+    },
+  ]); //set to empty array, not empty string!
   const [inputValue, setInputValue] = useState("");
 
   const addTask = (name) => {
     //get next id for new array
     let taskIDs = taskList.map((item) => item.id);
-    let maxID = Math.max(...taskIDs);
-    let newID = maxID + 1;
+    console.log(taskIDs, "this is the Task ID");
 
-    //append new task to array
-    let newTaskList = [
-      ...taskList,
-      { id: newID, taskName: name, complete: false },
-    ];
+    let newTaskList;
+    if (taskIDs.length === 0) {
+      newTaskList = [...taskList, { id: 0, taskName: name, complete: false }];
+    } else {
+      let maxID = Math.max(...taskIDs); //Math.max expects numbers, but passing in an array won't work. So we need to use the spread operator to extract the numbers only from the array otherwise we will get a NaN error.
+      let newID = maxID + 1;
+      newTaskList = [
+        ...taskList,
+        { id: newID, taskName: name, complete: false },
+      ];
+    }
 
     //set tasklist to new array
     setTaskList(newTaskList);
   };
 
   const toggleTaskByID = (id) => {
-    // return taskList.map((item) => {
-    //   if (item.id == id) {
-    //     setTaskList(!item[id].complete);
-    //   }
-    // });
-
     //create a new array where one of the objects has boolean set to true
     let newTaskList = taskList.map((item) => {
       if (item.id === id) {
@@ -57,6 +44,27 @@ function App() {
       return item;
     });
     //set tasklist to new array
+    setTaskList(newTaskList);
+  };
+
+  //delete item from array
+  const deleteObjectFromArray = (id) => {
+    //search array for current object
+    // let newTaskList = taskList.map((item) => {
+    //   if (item.id === id) {
+    //     //return object
+    //     return { ...item };
+    //   }
+    //   return item;
+    // });
+
+    let newTaskList = [...taskList];
+    let findIndexofTask = newTaskList.findIndex((task) => {
+      return task.id === id;
+    });
+    console.log(findIndexofTask, "this is the index of clicked item.");
+    newTaskList.splice(findIndexofTask, 1);
+    //update state, and trigger rerender
     setTaskList(newTaskList);
   };
 
@@ -81,7 +89,11 @@ function App() {
 
       {/* This will pass the entire array of tasks down to the TaskList componenent to be rendered into task by the Task componenent. */}
       <ul className="ListofTasks">
-        <TaskList todoitems={taskList} toggleTaskByID={toggleTaskByID} />{" "}
+        <TaskList
+          todoitems={taskList}
+          toggleTaskByID={toggleTaskByID}
+          deleteObjectFromArray={deleteObjectFromArray}
+        />{" "}
       </ul>
 
       <button onClick={() => toggleTaskByID(1)}>Click Me</button>
