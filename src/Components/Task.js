@@ -1,8 +1,8 @@
-import { useState, React } from "react";
+import { React } from "react";
 import "./Task.css";
 
 /* Reading the entire array of objects, but only pulling the names of the tasks and rendering those.*/
-function Task({ task, toggleTaskByID, deleteObjectFromArray }) {
+function Task({ task, toggleTaskByID, deleteTaskByID }) {
   return (
     <>
       <span className="TaskBox">
@@ -15,7 +15,7 @@ function Task({ task, toggleTaskByID, deleteObjectFromArray }) {
         <li className="TaskBox_Checkbox" key={task.id}>
           {task.taskName}
         </li>
-        <button onClick={() => deleteObjectFromArray(task.id)}>Delete</button>
+        <button onClick={() => deleteTaskByID(task.id)}>Delete</button>
       </span>
     </>
   );

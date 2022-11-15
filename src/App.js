@@ -8,28 +8,22 @@ function App() {
   const [taskList, setTaskList] = useState([
     {
       id: 0,
-      taskName: "This is a task",
+      taskName: "Go for a walk",
       complete: false,
     },
   ]); //set to empty array, not empty string!
   const [inputValue, setInputValue] = useState("");
 
   const addTask = (name) => {
-    //get next id for new array
+    //Returns an array of numbers corresponding to the IDs of each object in the array.
     let taskIDs = taskList.map((item) => item.id);
-    console.log(taskIDs, "this is the Task ID");
+    let maxID = taskIDs.reduce((a, b) => Math.max(a, b), 0);
+    let newID = maxID + 1;
 
-    let newTaskList;
-    if (taskIDs.length === 0) {
-      newTaskList = [...taskList, { id: 0, taskName: name, complete: false }];
-    } else {
-      let maxID = Math.max(...taskIDs); //Math.max expects numbers, but passing in an array won't work. So we need to use the spread operator to extract the numbers only from the array otherwise we will get a NaN error.
-      let newID = maxID + 1;
-      newTaskList = [
-        ...taskList,
-        { id: newID, taskName: name, complete: false },
-      ];
-    }
+    let newTaskList = [
+      ...taskList,
+      { id: newID, taskName: name, complete: false },
+    ];
 
     //set tasklist to new array
     setTaskList(newTaskList);
@@ -48,23 +42,12 @@ function App() {
   };
 
   //delete item from array
-  const deleteObjectFromArray = (id) => {
-    //search array for current object
-    // let newTaskList = taskList.map((item) => {
-    //   if (item.id === id) {
-    //     //return object
-    //     return { ...item };
-    //   }
-    //   return item;
-    // });
-
-    let newTaskList = [...taskList];
-    let findIndexofTask = newTaskList.findIndex((task) => {
-      return task.id === id;
+  const deleteTaskByID = (id) => {
+    //return a shallow copy of the taskList array expect without the element that matches the id (aka the one that the user wants deleted.)
+    let newTaskList = taskList.filter((task) => {
+      return task.id !== id;
     });
-    console.log(findIndexofTask, "this is the index of clicked item.");
-    newTaskList.splice(findIndexofTask, 1);
-    //update state, and trigger rerender
+
     setTaskList(newTaskList);
   };
 
@@ -92,7 +75,7 @@ function App() {
         <TaskList
           todoitems={taskList}
           toggleTaskByID={toggleTaskByID}
-          deleteObjectFromArray={deleteObjectFromArray}
+          deleteTaskByID={deleteTaskByID}
         />{" "}
       </ul>
 
