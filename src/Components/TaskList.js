@@ -8,8 +8,9 @@ function TaskList({
   toggleTaskByID,
   deleteTaskByID,
   editTaskByID,
-  showTask,
-  setShowTask,
+  toggleShowTask,
+  inputValue,
+  setInputValue,
   updateValue,
   setUpdateValue,
 }) {
@@ -21,8 +22,9 @@ function TaskList({
           toggleTaskByID={toggleTaskByID}
           deleteTaskByID={deleteTaskByID}
           editTaskByID={editTaskByID}
-          showTask={showTask}
-          setShowTask={setShowTask}
+          toggleShowTask={toggleShowTask}
+          inputValue={inputValue}
+          setInputValue={setInputValue}
           updateValue={updateValue}
           setUpdateValue={setUpdateValue}
           key={item.id}

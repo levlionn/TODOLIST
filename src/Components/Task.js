@@ -7,8 +7,9 @@ function Task({
   toggleTaskByID,
   deleteTaskByID,
   editTaskByID,
-  showTask,
-  setShowTask,
+  toggleShowTask,
+  inputValue,
+  setInputValue,
   updateValue,
   setUpdateValue,
 }) {
@@ -22,23 +23,36 @@ function Task({
           onChange={() => toggleTaskByID(task.id)}
         />
 
-        <li className="TaskBox_TaskRow" key={task.id}>
-          {!showTask ? <input type="text" /> : <div>{task.taskName}</div>}
-        </li>
-
+        {task.isShown ? (
+          <li className="TaskBox_TaskRow" key={task.id}>
+            <div>{task.taskName}</div>
+          </li>
+        ) : (
+          <input
+            type="text"
+            value={updateValue}
+            onChange={(e) => setUpdateValue(e.target.value)}
+          />
+        )}
         <button onClick={() => deleteTaskByID(task.id)}>Delete</button>
 
-        {showTask ? (
+        {task.isShown ? (
           <button
             onClick={() => {
-              setShowTask(false);
-              editTaskByID(task.id);
+              toggleShowTask(task.id);
             }}
           >
             Edit
           </button>
         ) : (
-          <button onClick={() => setShowTask(true)}>Done</button>
+          <button
+            onClick={() => {
+              toggleShowTask(task.id);
+              editTaskByID(task.id, updateValue);
+            }}
+          >
+            Done
+          </button>
         )}
       </span>
     </>

@@ -6,14 +6,13 @@ import Header from "./Header";
 
 function App() {
   const [inputValue, setInputValue] = useState("");
-  const [showTask, setShowTask] = useState(true);
-  const [updateValue, setUpdateValue] = useState({});
-
+  const [updateValue, setUpdateValue] = useState("");
   const [taskList, setTaskList] = useState([
     {
       id: 0,
       taskName: "Go for a walk",
       complete: false,
+      isShown: true,
     },
   ]);
 
@@ -25,7 +24,7 @@ function App() {
 
     let newTaskList = [
       ...taskList,
-      { id: newID, taskName: name, complete: false },
+      { id: newID, taskName: name, complete: false, isShown: true },
     ];
 
     //set tasklist to new array
@@ -54,18 +53,40 @@ function App() {
     setTaskList(newTaskList);
   };
 
+  const toggleShowTask = (id) => {
+    let newTaskList = taskList.map((task) => {
+      if (task.id === id) {
+        return { ...task, isShown: !task.isShown };
+      }
+      return task;
+    });
+
+    setTaskList(newTaskList);
+  };
+
   //edit task in array
-  const editTaskByID = (id) => {
-    console.log("item id is", id);
+  const editTaskByID = (id, userEdits) => {
+    let newTaskList = taskList.map((task) => {
+      if (task.id === id) {
+        return {
+          ...task,
+          taskName: userEdits,
+          isShown: !task.isShown,
+        };
+      }
+      return task;
+    });
+
+    setTaskList(newTaskList);
   };
 
   return (
     <div className="App">
       {/* This displays the <h1> tag above the website*/}
       <Header />
-      <pre style={{ textAlign: "left" }}>
+      {/* <pre style={{ textAlign: "left" }}>
         {JSON.stringify(taskList, null, 2)}
-      </pre>
+      </pre> */}
 
       <label>
         <input
@@ -85,8 +106,9 @@ function App() {
           toggleTaskByID={toggleTaskByID}
           deleteTaskByID={deleteTaskByID}
           editTaskByID={editTaskByID}
-          showTask={showTask}
-          setShowTask={setShowTask}
+          toggleShowTask={toggleShowTask}
+          inputValue={inputValue}
+          setInputValue={setInputValue}
           updateValue={updateValue}
           setUpdateValue={setUpdateValue}
         />
