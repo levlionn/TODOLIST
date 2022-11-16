@@ -5,14 +5,17 @@ import TaskList from "./Components/TaskList";
 import Header from "./Header";
 
 function App() {
+  const [inputValue, setInputValue] = useState("");
+  const [showTask, setShowTask] = useState(true);
+  const [updateValue, setUpdateValue] = useState({});
+
   const [taskList, setTaskList] = useState([
     {
       id: 0,
       taskName: "Go for a walk",
       complete: false,
     },
-  ]); //set to empty array, not empty string!
-  const [inputValue, setInputValue] = useState("");
+  ]);
 
   const addTask = (name) => {
     //Returns an array of numbers corresponding to the IDs of each object in the array.
@@ -41,7 +44,7 @@ function App() {
     setTaskList(newTaskList);
   };
 
-  //delete item from array
+  //delete task from array
   const deleteTaskByID = (id) => {
     //return a shallow copy of the taskList array expect without the element that matches the id (aka the one that the user wants deleted.)
     let newTaskList = taskList.filter((task) => {
@@ -49,6 +52,11 @@ function App() {
     });
 
     setTaskList(newTaskList);
+  };
+
+  //edit task in array
+  const editTaskByID = (id) => {
+    console.log("item id is", id);
   };
 
   return (
@@ -76,10 +84,13 @@ function App() {
           todoitems={taskList}
           toggleTaskByID={toggleTaskByID}
           deleteTaskByID={deleteTaskByID}
-        />{" "}
+          editTaskByID={editTaskByID}
+          showTask={showTask}
+          setShowTask={setShowTask}
+          updateValue={updateValue}
+          setUpdateValue={setUpdateValue}
+        />
       </ul>
-
-      <button onClick={() => toggleTaskByID(1)}>Click Me</button>
     </div>
   );
 }

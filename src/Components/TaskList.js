@@ -3,7 +3,16 @@ import Task from "./Task";
 
 //This is a list of tasks that passes down the data from App.js (the entire array of tasks)
 //into one single task to be rendered into an <li> item.
-function TaskList({ todoitems, toggleTaskByID, deleteTaskByID }) {
+function TaskList({
+  todoitems,
+  toggleTaskByID,
+  deleteTaskByID,
+  editTaskByID,
+  showTask,
+  setShowTask,
+  updateValue,
+  setUpdateValue,
+}) {
   return (
     <div>
       {todoitems.map((item) => (
@@ -11,6 +20,11 @@ function TaskList({ todoitems, toggleTaskByID, deleteTaskByID }) {
           task={item}
           toggleTaskByID={toggleTaskByID}
           deleteTaskByID={deleteTaskByID}
+          editTaskByID={editTaskByID}
+          showTask={showTask}
+          setShowTask={setShowTask}
+          updateValue={updateValue}
+          setUpdateValue={setUpdateValue}
           key={item.id}
         />
       ))}
