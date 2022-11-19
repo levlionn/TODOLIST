@@ -8,14 +8,16 @@ function App() {
   const [inputValue, setInputValue] = useState("");
   const [updateValue, setUpdateValue] = useState("");
   const [disableButton, setDisableButton] = useState(false);
+  const [filterSelection, setFilterSelection] = useState("");
   const [taskList, setTaskList] = useState([
     {
       id: 0,
       taskName: "Go for a walk",
       complete: false,
-      isShown: true,
+      inEditMode: true,
     },
   ]);
+  const [backUpTaskList, setBackUpTaskList] = useState(taskList);
 
   const addTask = (name) => {
     //Returns an array of numbers corresponding to the IDs of each object in the array.
@@ -25,7 +27,7 @@ function App() {
 
     let newTaskList = [
       ...taskList,
-      { id: newID, taskName: name, complete: false, isShown: true },
+      { id: newID, taskName: name, complete: false, inEditMode: true },
     ];
 
     //set tasklist to new array
@@ -54,10 +56,10 @@ function App() {
     setTaskList(newTaskList);
   };
 
-  const toggleShowTask = (id) => {
+  const toggleEditMode = (id) => {
     let newTaskList = taskList.map((task) => {
       if (task.id === id) {
-        return { ...task, isShown: !task.isShown };
+        return { ...task, inEditMode: !task.inEditMode };
       }
       return task;
     });
@@ -72,7 +74,7 @@ function App() {
         return {
           ...task,
           taskName: userEdits,
-          isShown: !task.isShown,
+          inEditMode: !task.inEditMode,
         };
       }
       return task;
@@ -90,9 +92,32 @@ function App() {
     setUpdateValue(currentTask[0].taskName);
   };
 
+  //not a PURE function either - returning multiple options instead of just 1, plus changing outside the scope of the function.
+  const filterMenu = (optionSelected) => {
+    console.log(optionSelected, "option selected");
+    //make new copy of tasklist
+    let backUpTaskList = [...taskList];
+
+    if (optionSelected === "completed") {
+      backUpTaskList = taskList.filter((task) => {
+        return task.complete === true;
+      });
+    }
+
+    if (optionSelected === "alphabetical") {
+      backUpTaskList = taskList.sort((task1, task2) => {
+        return task1.taskName
+          .toLowerCase()
+          .localeCompare(task2.taskName.toLowerCase());
+      });
+    }
+
+    setBackUpTaskList(backUpTaskList);
+    console.log(backUpTaskList);
+  };
+
   return (
     <div className="App">
-      {/* This displays the <h1> tag above the website*/}
       <Header />
       {/* <pre style={{ textAlign: "left" }}>
         {JSON.stringify(taskList, null, 2)}
@@ -109,22 +134,51 @@ function App() {
       </label>
       <button onClick={() => addTask(inputValue)}>Add To List</button>
 
+      <select
+        value={filterSelection}
+        onChange={(e) => {
+          setFilterSelection(e.target.value);
+          filterMenu(e.target.value);
+        }}
+      >
+        <option value="">Filter/Sort By</option>
+        <option value="completed">Filter: Completed</option>
+        <option value="alphabetical">Sort: Alphabetical</option>
+      </select>
+
       {/* This will pass the entire array of tasks down to the TaskList componenent to be rendered into task by the Task componenent. */}
       <ul className="ListofTasks">
-        <TaskList
-          todoitems={taskList}
-          toggleTaskByID={toggleTaskByID}
-          deleteTaskByID={deleteTaskByID}
-          editTaskByID={editTaskByID}
-          toggleShowTask={toggleShowTask}
-          inputValue={inputValue}
-          setInputValue={setInputValue}
-          updateValue={updateValue}
-          setUpdateValue={setUpdateValue}
-          copyCurrentFieldValue={copyCurrentFieldValue}
-          disableButton={disableButton}
-          setDisableButton={setDisableButton}
-        />
+        {filterSelection === "" ? (
+          <TaskList
+            todoitems={taskList}
+            toggleTaskByID={toggleTaskByID}
+            deleteTaskByID={deleteTaskByID}
+            editTaskByID={editTaskByID}
+            toggleEditMode={toggleEditMode}
+            inputValue={inputValue}
+            setInputValue={setInputValue}
+            updateValue={updateValue}
+            setUpdateValue={setUpdateValue}
+            copyCurrentFieldValue={copyCurrentFieldValue}
+            disableButton={disableButton}
+            setDisableButton={setDisableButton}
+          />
+        ) : (
+          <TaskList
+            todoitems={backUpTaskList}
+            toggleTaskByID={toggleTaskByID}
+            deleteTaskByID={deleteTaskByID}
+            editTaskByID={editTaskByID}
+            toggleEditMode={toggleEditMode}
+            inputValue={inputValue}
+            setInputValue={setInputValue}
+            updateValue={updateValue}
+            setUpdateValue={setUpdateValue}
+            copyCurrentFieldValue={copyCurrentFieldValue}
+            disableButton={disableButton}
+            setDisableButton={setDisableButton}
+          />
+        )}
       </ul>
     </div>
   );

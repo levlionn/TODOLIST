@@ -8,9 +8,7 @@ function TaskList({
   toggleTaskByID,
   deleteTaskByID,
   editTaskByID,
-  toggleShowTask,
-  inputValue,
-  setInputValue,
+  toggleEditMode,
   updateValue,
   setUpdateValue,
   copyCurrentFieldValue,
@@ -18,16 +16,14 @@ function TaskList({
   setDisableButton,
 }) {
   return (
-    <div>
+    <>
       {todoitems.map((item) => (
         <Task
           task={item}
           toggleTaskByID={toggleTaskByID}
           deleteTaskByID={deleteTaskByID}
           editTaskByID={editTaskByID}
-          toggleShowTask={toggleShowTask}
-          inputValue={inputValue}
-          setInputValue={setInputValue}
+          toggleEditMode={toggleEditMode}
           updateValue={updateValue}
           setUpdateValue={setUpdateValue}
           copyCurrentFieldValue={copyCurrentFieldValue}
@@ -36,7 +32,7 @@ function TaskList({
           key={item.id}
         />
       ))}
-    </div>
+    </>
   );
 }
 

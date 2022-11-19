@@ -7,9 +7,7 @@ function Task({
   toggleTaskByID,
   deleteTaskByID,
   editTaskByID,
-  toggleShowTask,
-  inputValue,
-  setInputValue,
+  toggleEditMode,
   updateValue,
   setUpdateValue,
   copyCurrentFieldValue,
@@ -26,17 +24,16 @@ function Task({
           onChange={() => toggleTaskByID(task.id)}
         />
 
-        {task.isShown ? (
+        {task.inEditMode ? (
           <>
             <li className="TaskBox_TaskRow" key={task.id}>
               <div>{task.taskName}</div>
             </li>
             <button
               onClick={() => {
-                toggleShowTask(task.id);
+                toggleEditMode(task.id);
                 copyCurrentFieldValue(task.id, updateValue);
                 setDisableButton(true);
-                console.log(disableButton);
               }}
               disabled={disableButton}
             >
@@ -52,7 +49,7 @@ function Task({
             />
             <button
               onClick={() => {
-                toggleShowTask(task.id);
+                toggleEditMode(task.id);
                 editTaskByID(task.id, updateValue);
                 setDisableButton(false);
               }}
