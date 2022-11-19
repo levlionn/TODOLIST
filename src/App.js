@@ -12,12 +12,12 @@ function App() {
   const [taskList, setTaskList] = useState([
     {
       id: 0,
-      taskName: "Go for a walk",
+      taskName: "Drink Milk",
       complete: false,
       inEditMode: true,
     },
   ]);
-  const [backUpTaskList, setBackUpTaskList] = useState(taskList);
+  const [backUpTaskList, setBackUpTaskList] = useState(taskList); //used for filter & sort options
 
   const addTask = (name) => {
     //Returns an array of numbers corresponding to the IDs of each object in the array.
@@ -32,6 +32,7 @@ function App() {
 
     //set tasklist to new array
     setTaskList(newTaskList);
+    setInputValue("");
   };
 
   const toggleTaskByID = (id) => {
@@ -94,7 +95,6 @@ function App() {
 
   //not a PURE function either - returning multiple options instead of just 1, plus changing outside the scope of the function.
   const filterMenu = (optionSelected) => {
-    console.log(optionSelected, "option selected");
     //make new copy of tasklist
     let backUpTaskList = [...taskList];
 
@@ -116,6 +116,13 @@ function App() {
     console.log(backUpTaskList);
   };
 
+  const deleteAllTasks = () => {
+    let newTaskList = taskList.filter((task) => {
+      return task.id === -1;
+    });
+    setTaskList(newTaskList);
+  };
+
   return (
     <div className="App">
       <Header />
@@ -126,13 +133,21 @@ function App() {
       <label>
         <input
           type="text"
+          placeholder="Type to start..."
           value={inputValue}
           onChange={(e) => {
             setInputValue(e.target.value);
           }}
+          onKeyDown={(e) => {
+            if (e.key === "Enter") {
+              addTask(inputValue);
+            }
+          }}
         />
       </label>
-      <button onClick={() => addTask(inputValue)}>Add To List</button>
+      <button onClick={() => addTask(inputValue)} disabled={!inputValue}>
+        Add To List
+      </button>
 
       <select
         value={filterSelection}
@@ -180,6 +195,8 @@ function App() {
           />
         )}
       </ul>
+      <br></br>
+      <button onClick={deleteAllTasks}>Delete All</button>
     </div>
   );
 }

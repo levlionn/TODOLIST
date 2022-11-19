@@ -46,6 +46,13 @@ function Task({
               type="text"
               value={updateValue}
               onChange={(e) => setUpdateValue(e.target.value)}
+              onKeyDown={(e) => {
+                if (e.key === "Enter") {
+                  toggleEditMode(task.id);
+                  editTaskByID(task.id, updateValue);
+                  setDisableButton(false);
+                }
+              }}
             />
             <button
               onClick={() => {
