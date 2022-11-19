@@ -7,6 +7,7 @@ import Header from "./Header";
 function App() {
   const [inputValue, setInputValue] = useState("");
   const [updateValue, setUpdateValue] = useState("");
+  const [disableButton, setDisableButton] = useState(false);
   const [taskList, setTaskList] = useState([
     {
       id: 0,
@@ -80,6 +81,15 @@ function App() {
     setTaskList(newTaskList);
   };
 
+  //not a pure function - oops - changing the state of something outside the scope of this function.
+  const copyCurrentFieldValue = (id) => {
+    //find the task that matchs the field the user pressed
+    let currentTask = taskList.filter((task) => {
+      return task.id === id;
+    });
+    setUpdateValue(currentTask[0].taskName);
+  };
+
   return (
     <div className="App">
       {/* This displays the <h1> tag above the website*/}
@@ -111,6 +121,9 @@ function App() {
           setInputValue={setInputValue}
           updateValue={updateValue}
           setUpdateValue={setUpdateValue}
+          copyCurrentFieldValue={copyCurrentFieldValue}
+          disableButton={disableButton}
+          setDisableButton={setDisableButton}
         />
       </ul>
     </div>

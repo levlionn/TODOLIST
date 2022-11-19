@@ -12,6 +12,9 @@ function Task({
   setInputValue,
   updateValue,
   setUpdateValue,
+  copyCurrentFieldValue,
+  disableButton,
+  setDisableButton,
 }) {
   return (
     <>
@@ -24,36 +27,42 @@ function Task({
         />
 
         {task.isShown ? (
-          <li className="TaskBox_TaskRow" key={task.id}>
-            <div>{task.taskName}</div>
-          </li>
+          <>
+            <li className="TaskBox_TaskRow" key={task.id}>
+              <div>{task.taskName}</div>
+            </li>
+            <button
+              onClick={() => {
+                toggleShowTask(task.id);
+                copyCurrentFieldValue(task.id, updateValue);
+                setDisableButton(true);
+                console.log(disableButton);
+              }}
+              disabled={disableButton}
+            >
+              Edit
+            </button>
+          </>
         ) : (
-          <input
-            type="text"
-            value={updateValue}
-            onChange={(e) => setUpdateValue(e.target.value)}
-          />
+          <>
+            <input
+              type="text"
+              value={updateValue}
+              onChange={(e) => setUpdateValue(e.target.value)}
+            />
+            <button
+              onClick={() => {
+                toggleShowTask(task.id);
+                editTaskByID(task.id, updateValue);
+                setDisableButton(false);
+              }}
+            >
+              Done
+            </button>
+          </>
         )}
-        <button onClick={() => deleteTaskByID(task.id)}>Delete</button>
 
-        {task.isShown ? (
-          <button
-            onClick={() => {
-              toggleShowTask(task.id);
-            }}
-          >
-            Edit
-          </button>
-        ) : (
-          <button
-            onClick={() => {
-              toggleShowTask(task.id);
-              editTaskByID(task.id, updateValue);
-            }}
-          >
-            Done
-          </button>
-        )}
+        <button onClick={() => deleteTaskByID(task.id)}>Delete</button>
       </span>
     </>
   );

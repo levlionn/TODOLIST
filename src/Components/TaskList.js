@@ -13,6 +13,9 @@ function TaskList({
   setInputValue,
   updateValue,
   setUpdateValue,
+  copyCurrentFieldValue,
+  disableButton,
+  setDisableButton,
 }) {
   return (
     <div>
@@ -27,6 +30,9 @@ function TaskList({
           setInputValue={setInputValue}
           updateValue={updateValue}
           setUpdateValue={setUpdateValue}
+          copyCurrentFieldValue={copyCurrentFieldValue}
+          disableButton={disableButton}
+          setDisableButton={setDisableButton}
           key={item.id}
         />
       ))}
