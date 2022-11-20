@@ -3,17 +3,18 @@ import { useState } from "react";
 
 import TaskList from "./Components/TaskList";
 import Header from "./Header";
+import React from "react";
+
+export interface TaskItem {
+  id: number;
+  taskName: string;
+  complete: boolean;
+}
 
 function App() {
   const [inputValue, setInputValue] = useState("");
   const [filterSelection, setFilterSelection] = useState("");
-  const [taskList, setTaskList] = useState([
-    {
-      id: 0,
-      taskName: "Drink Milk",
-      complete: false,
-    },
-  ]);
+  const [taskList, setTaskList] = useState<TaskItem[]>([]);
 
   let shownTaskList = taskList.filter((task) => {
     if (filterSelection === "completed") {
@@ -33,7 +34,7 @@ function App() {
     });
   }
 
-  const addTask = (name) => {
+  const addTask = (name: string) => {
     //Returns an array of numbers corresponding to the IDs of each object in the array.
     let taskIDs = taskList.map((item) => item.id);
     let maxID = taskIDs.reduce((a, b) => Math.max(a, b), 0);
@@ -41,7 +42,7 @@ function App() {
 
     let newTaskList = [
       ...taskList,
-      { id: newID, taskName: name, complete: false },
+      { id: newID, taskName: name, complete: false, inComplete: false },
     ];
 
     //set tasklist to new array
@@ -49,7 +50,7 @@ function App() {
     setInputValue("");
   };
 
-  const toggleTaskByID = (id) => {
+  const toggleTaskByID = (id: number) => {
     //create a new array where one of the objects has boolean set to true
     let newTaskList = taskList.map((item) => {
       if (item.id === id) {
@@ -62,7 +63,7 @@ function App() {
   };
 
   //delete task from array
-  const deleteTaskByID = (id) => {
+  const deleteTaskByID = (id: number) => {
     //return a shallow copy of the taskList array expect without the element that matches the id (aka the one that the user wants deleted.)
     let newTaskList = taskList.filter((task) => {
       return task.id !== id;
@@ -72,7 +73,7 @@ function App() {
   };
 
   //edit task in array
-  const editTaskByID = (id, userEdits) => {
+  const editTaskByID = (id: number, userEdits: string) => {
     let newTaskList = taskList.map((task) => {
       if (task.id === id) {
         return {

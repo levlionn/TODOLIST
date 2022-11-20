@@ -1,8 +1,17 @@
-import { React, useState, useEffect } from "react";
+import { useState, useEffect } from "react";
+import React from "react";
 import "./Task.css";
+import { TaskItem } from "../App";
+
+interface Props {
+  task: TaskItem;
+  toggleTaskByID: (id: number) => void;
+  deleteTaskByID: (id: number) => void;
+  editTaskByID: (id: number, userEdits: string) => void;
+}
 
 /* Reading the entire array of objects, but only pulling the names of the tasks and rendering those.*/
-function Task({ task, toggleTaskByID, deleteTaskByID, editTaskByID }) {
+function Task({ task, toggleTaskByID, deleteTaskByID, editTaskByID }: Props) {
   const [inEditMode, setInEditMode] = useState(false);
   const [inputValue, setInputValue] = useState(""); //this input value is specific to this component – no one else cares about this.
 
