@@ -11,22 +11,24 @@ export interface TaskItem {
   complete: boolean;
 }
 
+type FilterOption = "COMPLETED" | "NOT_FINISHED" | "ALPHABETICAL" | "";
+
 function App() {
   const [inputValue, setInputValue] = useState("");
-  const [filterSelection, setFilterSelection] = useState("");
+  const [filterSelection, setFilterSelection] = useState<FilterOption>("");
   const [taskList, setTaskList] = useState<TaskItem[]>([]);
 
   let shownTaskList = taskList.filter((task) => {
-    if (filterSelection === "completed") {
+    if (filterSelection === "COMPLETED") {
       return task.complete;
-    } else if (filterSelection === "not finished") {
+    } else if (filterSelection === "NOT_FINISHED") {
       return !task.complete;
     }
 
     return task;
   });
 
-  if (filterSelection === "alphabetical") {
+  if (filterSelection === "ALPHABETICAL") {
     shownTaskList = taskList.sort((task1, task2) => {
       return task1.taskName
         .toLowerCase()
@@ -42,7 +44,7 @@ function App() {
 
     let newTaskList = [
       ...taskList,
-      { id: newID, taskName: name, complete: false, inComplete: false },
+      { id: newID, taskName: name, complete: false },
     ];
 
     //set tasklist to new array
@@ -123,13 +125,13 @@ function App() {
       <select
         value={filterSelection}
         onChange={(e) => {
-          setFilterSelection(e.target.value);
+          setFilterSelection(e.target.value as FilterOption);
         }}
       >
         <option value="">Filter/Sort By</option>
-        <option value="completed">Filter: Completed</option>
-        <option value="alphabetical">Sort: Alphabetical</option>
-        <option value="not finished">Filter: Not Finished</option>
+        <option value="COMPLETED">Filter: Completed</option>
+        <option value="ALPHABETICAL">Sort: Alphabetical</option>
+        <option value="NOT_FINISHED">Filter: Not Finished</option>
       </select>
 
       {/* This will pass the entire array of tasks down to the TaskList componenent to be rendered into task by the Task componenent. */}
