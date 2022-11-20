@@ -6,18 +6,32 @@ import Header from "./Header";
 
 function App() {
   const [inputValue, setInputValue] = useState("");
-  const [updateValue, setUpdateValue] = useState("");
-  const [disableButton, setDisableButton] = useState(false);
   const [filterSelection, setFilterSelection] = useState("");
   const [taskList, setTaskList] = useState([
     {
       id: 0,
       taskName: "Drink Milk",
       complete: false,
-      inEditMode: true,
     },
   ]);
-  const [backUpTaskList, setBackUpTaskList] = useState(taskList); //used for filter & sort options
+
+  let shownTaskList = taskList.filter((task) => {
+    if (filterSelection === "completed") {
+      return task.complete;
+    } else if (filterSelection === "not finished") {
+      return !task.complete;
+    }
+
+    return task;
+  });
+
+  if (filterSelection === "alphabetical") {
+    shownTaskList = taskList.sort((task1, task2) => {
+      return task1.taskName
+        .toLowerCase()
+        .localeCompare(task2.taskName.toLowerCase());
+    });
+  }
 
   const addTask = (name) => {
     //Returns an array of numbers corresponding to the IDs of each object in the array.
@@ -27,7 +41,7 @@ function App() {
 
     let newTaskList = [
       ...taskList,
-      { id: newID, taskName: name, complete: false, inEditMode: true },
+      { id: newID, taskName: name, complete: false },
     ];
 
     //set tasklist to new array
@@ -57,17 +71,6 @@ function App() {
     setTaskList(newTaskList);
   };
 
-  const toggleEditMode = (id) => {
-    let newTaskList = taskList.map((task) => {
-      if (task.id === id) {
-        return { ...task, inEditMode: !task.inEditMode };
-      }
-      return task;
-    });
-
-    setTaskList(newTaskList);
-  };
-
   //edit task in array
   const editTaskByID = (id, userEdits) => {
     let newTaskList = taskList.map((task) => {
@@ -75,45 +78,12 @@ function App() {
         return {
           ...task,
           taskName: userEdits,
-          inEditMode: !task.inEditMode,
         };
       }
       return task;
     });
 
     setTaskList(newTaskList);
-  };
-
-  //not a pure function - oops - changing the state of something outside the scope of this function.
-  const copyCurrentFieldValue = (id) => {
-    //find the task that matchs the field the user pressed
-    let currentTask = taskList.filter((task) => {
-      return task.id === id;
-    });
-    setUpdateValue(currentTask[0].taskName);
-  };
-
-  //not a PURE function either - returning multiple options instead of just 1, plus changing outside the scope of the function.
-  const filterMenu = (optionSelected) => {
-    //make new copy of tasklist
-    let backUpTaskList = [...taskList];
-
-    if (optionSelected === "completed") {
-      backUpTaskList = taskList.filter((task) => {
-        return task.complete === true;
-      });
-    }
-
-    if (optionSelected === "alphabetical") {
-      backUpTaskList = taskList.sort((task1, task2) => {
-        return task1.taskName
-          .toLowerCase()
-          .localeCompare(task2.taskName.toLowerCase());
-      });
-    }
-
-    setBackUpTaskList(backUpTaskList);
-    console.log(backUpTaskList);
   };
 
   const deleteAllTasks = () => {
@@ -126,9 +96,9 @@ function App() {
   return (
     <div className="App">
       <Header />
-      {/* <pre style={{ textAlign: "left" }}>
+      <pre style={{ textAlign: "left" }}>
         {JSON.stringify(taskList, null, 2)}
-      </pre> */}
+      </pre>
 
       <label>
         <input
@@ -153,47 +123,22 @@ function App() {
         value={filterSelection}
         onChange={(e) => {
           setFilterSelection(e.target.value);
-          filterMenu(e.target.value);
         }}
       >
         <option value="">Filter/Sort By</option>
         <option value="completed">Filter: Completed</option>
         <option value="alphabetical">Sort: Alphabetical</option>
+        <option value="not finished">Filter: Not Finished</option>
       </select>
 
       {/* This will pass the entire array of tasks down to the TaskList componenent to be rendered into task by the Task componenent. */}
       <ul className="ListofTasks">
-        {filterSelection === "" ? (
-          <TaskList
-            todoitems={taskList}
-            toggleTaskByID={toggleTaskByID}
-            deleteTaskByID={deleteTaskByID}
-            editTaskByID={editTaskByID}
-            toggleEditMode={toggleEditMode}
-            inputValue={inputValue}
-            setInputValue={setInputValue}
-            updateValue={updateValue}
-            setUpdateValue={setUpdateValue}
-            copyCurrentFieldValue={copyCurrentFieldValue}
-            disableButton={disableButton}
-            setDisableButton={setDisableButton}
-          />
-        ) : (
-          <TaskList
-            todoitems={backUpTaskList}
-            toggleTaskByID={toggleTaskByID}
-            deleteTaskByID={deleteTaskByID}
-            editTaskByID={editTaskByID}
-            toggleEditMode={toggleEditMode}
-            inputValue={inputValue}
-            setInputValue={setInputValue}
-            updateValue={updateValue}
-            setUpdateValue={setUpdateValue}
-            copyCurrentFieldValue={copyCurrentFieldValue}
-            disableButton={disableButton}
-            setDisableButton={setDisableButton}
-          />
-        )}
+        <TaskList
+          todoitems={shownTaskList}
+          toggleTaskByID={toggleTaskByID}
+          deleteTaskByID={deleteTaskByID}
+          editTaskByID={editTaskByID}
+        />
       </ul>
       <br></br>
       <button onClick={deleteAllTasks}>Delete All</button>

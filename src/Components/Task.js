@@ -1,19 +1,20 @@
-import { React } from "react";
+import { React, useState, useEffect } from "react";
 import "./Task.css";
 
 /* Reading the entire array of objects, but only pulling the names of the tasks and rendering those.*/
-function Task({
-  task,
-  toggleTaskByID,
-  deleteTaskByID,
-  editTaskByID,
-  toggleEditMode,
-  updateValue,
-  setUpdateValue,
-  copyCurrentFieldValue,
-  disableButton,
-  setDisableButton,
-}) {
+function Task({ task, toggleTaskByID, deleteTaskByID, editTaskByID }) {
+  const [inEditMode, setInEditMode] = useState(false);
+  const [inputValue, setInputValue] = useState(""); //this input value is specific to this component – no one else cares about this.
+
+  useEffect(() => {
+    setInputValue(task.taskName);
+  }, [task.taskName]);
+
+  const handleDone = () => {
+    setInEditMode(false);
+    editTaskByID(task.id, inputValue);
+  };
+
   return (
     <>
       <span className="TaskBox">
@@ -23,47 +24,27 @@ function Task({
           checked={task.complete}
           onChange={() => toggleTaskByID(task.id)}
         />
-
-        {task.inEditMode ? (
-          <>
-            <li className="TaskBox_TaskRow" key={task.id}>
-              <div>{task.taskName}</div>
-            </li>
-            <button
-              onClick={() => {
-                toggleEditMode(task.id);
-                copyCurrentFieldValue(task.id, updateValue);
-                setDisableButton(true);
-              }}
-              disabled={disableButton}
-            >
-              Edit
-            </button>
-          </>
+        {!inEditMode ? (
+          <li className="TaskBox_TaskRow" key={task.id}>
+            <div>{task.taskName}</div>
+          </li>
         ) : (
-          <>
-            <input
-              type="text"
-              value={updateValue}
-              onChange={(e) => setUpdateValue(e.target.value)}
-              onKeyDown={(e) => {
-                if (e.key === "Enter") {
-                  toggleEditMode(task.id);
-                  editTaskByID(task.id, updateValue);
-                  setDisableButton(false);
-                }
-              }}
-            />
-            <button
-              onClick={() => {
-                toggleEditMode(task.id);
-                editTaskByID(task.id, updateValue);
-                setDisableButton(false);
-              }}
-            >
-              Done
-            </button>
-          </>
+          <input
+            type="text"
+            value={inputValue}
+            onChange={(e) => setInputValue(e.target.value)}
+            onKeyDown={(e) => {
+              if (e.key === "Enter") {
+                handleDone();
+              }
+            }}
+          />
+        )}
+
+        {!inEditMode ? (
+          <button onClick={() => setInEditMode(true)}>Edit</button>
+        ) : (
+          <button onClick={() => handleDone()}>Done</button>
         )}
 
         <button onClick={() => deleteTaskByID(task.id)}>Delete</button>
